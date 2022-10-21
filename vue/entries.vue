@@ -22,6 +22,7 @@ import {
 
 
 const props = defineProps({
+    colors: Array,
     modelValue: Array,
 })
 
@@ -33,25 +34,30 @@ const placeholder = `Enter votes as per the following:
 - Blank line between vote groups (i.e. voters)`
 
 
-const responses = ref(`Francis Drake
+const responses = ref(`# shady
+Francis Drake
 Libertalia
 Hansa
 Shipping
 
+# sal
 Cyclades
 Shipping
 Francis Drake
 Libertalia
 
+# saj
 Libertalia
 Cyclades
 Francis Drake
 
+# shak
 Shipping
 Libertalia
 Francis Drake
 Cyclades`)
 
+const getColorForIndex = index => props.colors[index]
 
 const voters = computed(() => responses.value
     .replaceAll(String.fromCharCode(160), ' ') // some devices use char(160) instead of char(32) for spaces, which breaks comparison tests... this fixes that
@@ -66,6 +72,26 @@ const voters = computed(() => responses.value
     .filter(voterArrayOfLines => voterArrayOfLines
         .some(line => line.length > 0)
     )
+    .map((voterBlock, index) => {
+        const color = getColorForIndex(index)
+
+        const name = (voterBlock[0].match(/^#/)
+                ? voterBlock[0].replace(/^#/, '').trim()
+                : color
+        )
+        .toLowerCase()
+        .replace(/\b[a-z]/g, letter => letter.toUpperCase())
+
+        const votes = voterBlock
+            .filter(entry => !entry.match(/^#/))
+
+        return {
+            name,
+            color,
+            votes,
+        }
+    })
+    .filter(voter => voter.votes.length)
 )
 
 const update = updated => emit('update:modelValue', updated.value)
