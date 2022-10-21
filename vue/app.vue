@@ -12,8 +12,12 @@
         />
 
         <div class="grow flex flex-col p-2">
-            <div class="flex justify-evenly">
+            <div class="flex flex-wrap gap-4 justify-center">
                 <Votes
+                    :voters="voters"
+                />
+
+                <Popularity
                     :voters="voters"
                 />
             </div>
@@ -32,6 +36,7 @@ export default {
 <script setup>
 import Entries from './entries.vue'
 import Votes   from './show/voters.vue'
+import Popularity from './show/popularity.vue'
 
 import {
     ref,
