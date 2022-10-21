@@ -11,7 +11,7 @@
             v-model="voters"
         />
 
-        <div class="grow flex flex-col p-2">
+        <div class="grow flex flex-col p-2 gap-4">
             <div class="flex flex-wrap gap-4 justify-center">
                 <Votes
                     :voters="voters"
@@ -21,6 +21,10 @@
                     :voters="voters"
                 />
             </div>
+
+            <TopWeighted
+                :voters="voters"
+            />
         </div>
     </div>
 </template>
@@ -37,6 +41,7 @@ export default {
 import Entries from './entries.vue'
 import Votes   from './show/voters.vue'
 import Popularity from './show/popularity.vue'
+import TopWeighted from './show/top-weighted.vue'
 
 import {
     ref,
