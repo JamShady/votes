@@ -23,7 +23,7 @@ import {
 } from 'vue'
 
 
-import Scored from '../tmpl/scored.vue'
+import Scored from '../../tmpl/scored.vue'
 
 
 const props = defineProps({

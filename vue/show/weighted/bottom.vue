@@ -16,7 +16,7 @@ export default {
 
 
 <script setup>
-import Scored from '../tmpl/scored.vue'
+import Scored from '../../tmpl/scored.vue'
 
 
 const scorer = vote => vote.voters

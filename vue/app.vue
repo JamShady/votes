@@ -22,11 +22,7 @@
                 />
             </div>
 
-            <TopWeighted
-                :voters="voters"
-            />
-
-            <BottomWeighted
+            <Weighted
                 :voters="voters"
             />
         </div>
@@ -45,8 +41,7 @@ export default {
 import Entries from './entries.vue'
 import Votes   from './show/voters.vue'
 import Popularity from './show/popularity.vue'
-import TopWeighted from './show/top-weighted.vue'
-import BottomWeighted from './show/bottom-weighted.vue'
+import Weighted from './show/weighted.vue'
 
 import {
     ref,
