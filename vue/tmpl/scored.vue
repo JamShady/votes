@@ -1,7 +1,11 @@
 <template>
     <Card>
         <template #header>
-            <slot />
+            <slot name="title" />
+        </template>
+
+        <template #desc>
+            <slot name="desc" />
         </template>
 
         <Card

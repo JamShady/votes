@@ -4,6 +4,10 @@
             Voters
         </template>
 
+        <template #desc>
+            Recognised Voters
+        </template>
+
         <div class="flex flex-wrap justify-evenly gap-2">
             <Card
                 v-for="voter in voters"

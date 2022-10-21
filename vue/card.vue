@@ -11,6 +11,14 @@
                 :class="`text-${color}-600 from-${color}-100 to-${color}-200 border-${color}-200 border-b-${color}-300`"
             >
                 <slot name="header" />
+
+                <div
+                    v-if="$slots['desc']"
+                    class="text-xs italic"
+                    :class="`text-${color}-400`"
+                >
+                    <slot name="desc" />
+                </div>
             </div>
 
             <div

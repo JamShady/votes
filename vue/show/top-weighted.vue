@@ -3,7 +3,8 @@
         :voters="voters"
         :scorer="scorer"
     >
-        Popularity By Top Weighted Vote ({{ maxNumVotes }})
+        <template #title>Popularity By Top Weighted Vote</template>
+        <template #desc>Ranking choices by descending weights, starting from {{ maxNumVotes }}</template>
     </Scored>
 </template>
 
@@ -22,7 +23,7 @@ import {
 } from 'vue'
 
 
-import Scored from './scored.vue'
+import Scored from '../tmpl/scored.vue'
 
 
 const props = defineProps({

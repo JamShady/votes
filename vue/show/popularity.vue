@@ -2,7 +2,8 @@
     <Scored
         :scorer="scorer"
     >
-        Popularity By Vote
+        <template #title>Popularity By Vote</template>
+        <template #desc>Ranking by counting voters</template>
     </Scored>
 </template>
 
@@ -15,7 +16,7 @@ export default {
 
 
 <script setup>
-import Scored from './scored.vue'
+import Scored from './../tmpl/scored.vue'
 
 const scorer = vote => vote.voters.length
 </script>
