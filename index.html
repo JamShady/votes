@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shady's Vote Machine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue3-sfc-loader/dist/vue3-sfc-loader.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+    }
+    </script>
+    <script type="module">
+        import * as Vue from 'vue'
+        const { loadModule } = window['vue3-sfc-loader'];
+
+        const el  = document.getElementById('app')
+        const app = Vue.createApp({})
+
+        // Define the options externally so they all share the same moduleCache property
+        // @see https://github.com/FranckFreiburger/vue3-sfc-loader/issues/16#issuecomment-770179744
+        const loaderOptions = {
+            moduleCache: {
+                vue: Vue
+            },
+
+            async getFile(url) {
+                const res = await fetch(url);
+                if (!res.ok) {
+                    throw Object.assign(new Error(`${url} ${res.statusText}`), { res });
+                }
+                return {
+                    getContentData: asBinary => asBinary
+                        ? res.arrayBuffer()
+                        : res.text(),
+                }
+            },
+
+            addStyle(textContent) {
+                const style = Object.assign(document.createElement('style'), { textContent })
+                const ref = document.head.getElementsByTagName('style')[0] || null
+                document.head.insertBefore(style, ref)
+            },
+        }
+
+        const vueTagMatch = /^v(ue)?-/i
+        Array.from(el.getElementsByTagName('*'))
+            .map(el => el.tagName.toLowerCase()) // @see https://stackoverflow.com/questions/4878484/difference-between-tagname-and-nodename
+            .filter(tagName => tagName.match(vueTagMatch))
+            .filter((value, index, self) => self.indexOf(value) === index)
+            .forEach(component => app.component(component, Vue.defineAsyncComponent(
+                () => loadModule(`/vue/${component.replace(vueTagMatch, '').replaceAll('-','/')}.vue`, loaderOptions))
+            ))
+
+        app.mount(el)
+    </script>
+</head>
+
+<body>
+    <div id="app">
+        <v-app></v-app>
+    </div>
+</body>
+</html>
