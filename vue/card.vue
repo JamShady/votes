@@ -25,7 +25,9 @@
                 class="p-2 shadow-inner"
                 :class="`text-${color}-700`"
             >
-                <slot />
+                <slot
+                    :color="color"
+                />
             </div>
         </div>
     </div>

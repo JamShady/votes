@@ -18,8 +18,5 @@ export default {
 <script setup>
 import Scored from '../../tmpl/scored.vue'
 
-
-const scorer = vote => vote.voters
-    .map(voter => voter.votes.length - voter.votes.indexOf(vote.vote))
-    .reduce((prev, curr) => prev + curr, 0)
+const scorer = (voter, vote) => voter.votes.length - voter.votes.indexOf(vote) // furthest vote counts as 1
 </script>

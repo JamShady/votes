@@ -18,5 +18,5 @@ export default {
 <script setup>
 import Scored from './../tmpl/scored.vue'
 
-const scorer = vote => vote.voters.length
+const scorer = () => 1 // each voter gives 1 vote
 </script>

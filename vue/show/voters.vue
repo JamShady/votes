@@ -1,5 +1,7 @@
 <template>
-    <Card>
+    <Card
+        class="rounded-b-xl"
+    >
         <template #header>
             Voters
         </template>

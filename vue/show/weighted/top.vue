@@ -34,7 +34,5 @@ const props = defineProps({
 const voters = toRef(props, 'voters')
 const maxNumVotes = computed(() => Math.max(...voters.value.map(voter => voter.votes.length)))
 
-const scorer = vote => vote.voters
-    .map(voter => maxNumVotes.value - voter.votes.indexOf(vote.vote))
-    .reduce((prev, curr) => prev + curr, 0)
+const scorer = (voter, vote) => maxNumVotes.value - voter.votes.indexOf(vote)
 </script>
