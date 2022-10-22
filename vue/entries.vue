@@ -1,6 +1,8 @@
 <template>
     <textarea
         :placeholder="placeholder"
+        @input="adjustHeight"
+        ref="textarea"
         v-model="responses"
     ></textarea>
 </template>
@@ -49,13 +51,22 @@ Libertalia
 # saj
 Libertalia
 Cyclades
-Francis Drake
+Franc
 
 # shak
 Shipping
 Libertalia
-Francis Drake
+Fran
 Cyclades`)
+
+
+const textarea = ref(null)
+const adjustHeight = () => {
+    const element = textarea.value
+    element.style.height = "auto"
+    element.style.height = (element.scrollHeight + 2) + 'px'
+}
+
 
 const getColorForIndex = index => props.colors[index]
 
@@ -96,5 +107,8 @@ const voters = computed(() => responses.value
 
 const update = updated => emit('update:modelValue', updated.value)
 watch(voters, () => update(voters))
-onMounted(() => update(voters))
+onMounted(() => {
+    setTimeout(adjustHeight, 250)
+    update(voters)
+})
 </script>
