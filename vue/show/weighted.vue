@@ -4,6 +4,7 @@
     >
         <Top    v-bind="$attrs" />
         <Bottom v-bind="$attrs" />
+        <Combined v-bind="$attrs" />
     </div>
 </template>
 
@@ -19,4 +20,5 @@ export default {
 <script setup>
 import Top    from './weighted/top.vue'
 import Bottom from './weighted/bottom.vue'
+import Combined from './weighted/combined.vue'
 </script>
