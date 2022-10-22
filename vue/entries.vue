@@ -37,7 +37,7 @@ const placeholder = `Enter votes as per the following:
 
 
 const responses = ref(`# shady
-Francis Drake
+Francis
 Libertalia
 Hansa
 Shipping
@@ -70,7 +70,7 @@ const adjustHeight = () => {
 
 const getColorForIndex = index => props.colors[index]
 
-const voters = computed(() => responses.value
+const voterBlocks = computed(() => responses.value
     .replaceAll(String.fromCharCode(160), ' ') // some devices use char(160) instead of char(32) for spaces, which breaks comparison tests... this fixes that
     .trim()
     .split(/\n{2,}/)
@@ -83,6 +83,30 @@ const voters = computed(() => responses.value
     .filter(voterArrayOfLines => voterArrayOfLines
         .some(line => line.length > 0)
     )
+)
+
+const votes = computed(() => voterBlocks.value
+    .flat()
+    .filter(line => !line.match(/^#/))
+    .filter((value, index, self) => self.indexOf(value) === index)
+)
+
+const normalise = vote => vote.toLowerCase()
+const normalToVoteMap = computed(() => votes.value
+    .map(vote => ({ [normalise(vote)]: vote }))
+    .reduce((prev, curr) => ({ ...prev, ...curr }), {})
+)
+const normalised = computed(() => Object.keys(normalToVoteMap.value))
+const conversions = computed(() => normalised.value
+    .map(normal => ({
+        [normal]: normalised.value
+            .filter(value => value.substring(0, normal.length) === normal)
+            .sort((a,b) => b.length - a.length)[0]
+    }))
+    .reduce((prev, curr) => ({ ...prev, ...curr }), {})
+)
+
+const voters = computed(() => voterBlocks.value
     .map((voterBlock, index) => {
         const color = getColorForIndex(index)
 
@@ -95,6 +119,8 @@ const voters = computed(() => responses.value
 
         const votes = voterBlock
             .filter(entry => !entry.match(/^#/))
+            .map(vote => normalToVoteMap.value[conversions.value[normalise(vote)]])
+            .filter((value, index, self) => self.indexOf(value) === index)
 
         return {
             name,
