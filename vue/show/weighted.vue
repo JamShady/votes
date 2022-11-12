@@ -1,10 +1,12 @@
 <template>
     <div
+        v-if="voters.length > 1"
         class="flex flex-wrap justify-center gap-4"
     >
-        <Top    v-bind="$attrs" />
-        <Bottom v-bind="$attrs" />
-        <Combined v-bind="$attrs" />
+        <Linear
+            :voters="voters"
+            :maxNumVotes="maxNumVotes"
+        />
     </div>
 </template>
 
@@ -12,13 +14,23 @@
 <script>
 export default {
     name: 'Weighted Rankings',
-    inheritAttrs: false,
 }
 </script>
 
 
 <script setup>
-import Top    from './weighted/top.vue'
-import Bottom from './weighted/bottom.vue'
-import Combined from './weighted/combined.vue'
+import Linear from './weighted/linear.vue'
+
+import {
+    toRef,
+    computed,
+} from 'vue'
+
+
+const props = defineProps({
+    voters: Array,
+})
+
+const voters = toRef(props, 'voters')
+const maxNumVotes = computed(() => Math.max(...voters.value.map(voter => voter.votes.length)))
 </script>
