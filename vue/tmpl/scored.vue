@@ -25,11 +25,52 @@
                             :class="`text-${voter.color}-500`"
                             :title="`${voter.name}: ${voter.score}`"
                         >
-                            <i
-                                v-for="i of voter.score"
-                                class="fa-solid fa-square-check m-0.5 shadow-md"
-                                :class="`shadow-${voter.color}-200`"
-                            ></i>
+                            <template v-if="bars">
+                                <span
+                                    v-if="voter.score % 5 !== 0"
+                                    class="fa-stack"
+                                    :class="`w-${voter.score % 5}`"
+                                >
+                                    <i
+                                        v-if="[1,3].includes(voter.score % 5)"
+                                        class="fa-stack-1x fa-solid fa-minus"
+                                        data-fa-transform="rotate-90 left-8 grow-1.5"
+                                    ></i>
+
+                                    <!-- generates vertical bars for 2, 3 and 4 tallys, which are identical except for the transform positioning -->
+                                    <i
+                                        v-for="transform in {1:[],2:['left-6'],3:['left-2'],4:['left-6','right-2']}[voter.score % 5]"
+                                        class="fa-stack-1x fa-solid fa-grip-lines-vertical fa-fw"
+                                        :data-fa-transform="transform"
+                                    ></i>
+                                </span>
+
+                                <span
+                                    v-for="i of Math.floor(voter.score / 5)"
+                                    class="fa-stack w-4 ml-0.5"
+                                >
+                                    <i
+                                        class="fa-stack-1x fa-solid fa-grip-lines-vertical"
+                                        data-fa-transform="left-6"
+                                    ></i>
+                                    <i
+                                        class="fa-stack-1x fa-solid fa-grip-lines-vertical"
+                                        data-fa-transform="right-2"
+                                    ></i>
+                                    <i
+                                        class="fa-stack-1x fa-solid fa-minus"
+                                        data-fa-transform="rotate--30 grow-6 left-2"
+                                    ></i>
+                                </span>
+                            </template>
+
+                            <template v-else>
+                                <i
+                                    v-for="i of voter.score"
+                                    class="fa-solid fa-square-check m-0.25 shadow-md"
+                                    :class="`shadow-${voter.color}-200`"
+                                ></i>
+                            </template>
                         </span>
                     </span>
                 </li>
@@ -59,6 +100,10 @@ import Card from '../card.vue'
 const props = defineProps({
     voters: Array,
     scorer: Function,
+    bars: {
+        type: Boolean,
+        default: true,
+    },
 })
 
 

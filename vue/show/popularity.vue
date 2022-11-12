@@ -1,6 +1,7 @@
 <template>
     <Scored
         :scorer="scorer"
+        :bars="false"
     >
         <template #title>Popularity By Vote</template>
         <template #desc>Ranking by counting voters</template>
