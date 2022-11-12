@@ -7,6 +7,11 @@
             :voters="voters"
             :maxNumVotes="maxNumVotes"
         />
+
+        <TopPriority
+            :voters="voters"
+            :maxNumVotes="maxNumVotes"
+        />
     </div>
 </template>
 
@@ -20,6 +25,7 @@ export default {
 
 <script setup>
 import Linear from './weighted/linear.vue'
+import TopPriority from './weighted/top-prority.vue'
 
 import {
     toRef,
