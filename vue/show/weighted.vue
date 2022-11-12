@@ -12,6 +12,11 @@
             :voters="voters"
             :maxNumVotes="maxNumVotes"
         />
+
+        <Logarithmic
+            :voters="voters"
+            :maxNumVotes="maxNumVotes"
+        />
     </div>
 </template>
 
@@ -26,6 +31,7 @@ export default {
 <script setup>
 import Linear from './weighted/linear.vue'
 import TopPriority from './weighted/top-prority.vue'
+import Logarithmic from './weighted/logarithmic.vue'
 
 import {
     toRef,
