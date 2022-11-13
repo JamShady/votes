@@ -3,11 +3,33 @@ import {
     Voters,
 } from '../../../votes'
 
+import {
+    toRef,
+    computed,
+} from 'vue'
+
 import Card from '../card.vue'
 
 const props = defineProps<{
     voters: Voters
 }>()
+
+const voters = toRef(props, 'voters')
+const counts = computed(() => voters.value
+    .map(voter => voter.votes)
+    .flat()
+    .reduce((count: { [x:string]:number }, vote: string) => ({ ...count, [vote]: (count[vote] || 0) + 1 }), {})
+)
+
+const votesByCount = (count: number) => Object.entries(counts.value)
+    .filter(([vote, voteCount]) => voteCount === count)
+    .map(([vote, voteCount]) => vote)
+
+const common = computed(() => votesByCount(voters.value.length))
+const unique = computed(() => votesByCount(1))
+
+const commonClass = 'font-medium'
+const uniqueClass = 'italic'
 </script>
 
 
@@ -42,6 +64,7 @@ export default {
                 <ol class="list-decimal list-inside">
                     <li
                         v-for="vote in voter.votes"
+                        :class="{ [commonClass]: common.includes(vote), [uniqueClass]: unique.includes(vote) }"
                     >
                         {{ vote }}
                     </li>
