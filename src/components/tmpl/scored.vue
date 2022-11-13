@@ -11,7 +11,10 @@ import {
 
 import Card from '../card.vue'
 
-import { library  } from '@fortawesome/fontawesome-svg-core'
+import {
+    IconDefinition,
+    library,
+} from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon  } from '@fortawesome/vue-fontawesome'
 import {
     faGripLinesVertical,
@@ -26,10 +29,18 @@ const props = withDefaults(defineProps<{
     voters: Voters
     scorer: Scorer
     bars?: boolean
+    icon?: {
+        definition: IconDefinition,
+        reference: string[],
+    }
 }>(), {
     bars: true,
 })
 
+const icon = toRef(props, 'icon')
+if (icon.value && icon.value.hasOwnProperty('definition')) {
+    library.add(icon.value?.definition)
+}
 
 const voters = toRef(props, 'voters')
 const scorer = props.scorer
@@ -67,6 +78,11 @@ export default {
 <template>
     <Card>
         <template #header>
+            <FontAwesomeIcon
+                v-if="icon"
+                :icon="icon.reference"
+                class="mr-2"
+            />
             <slot name="title" />
         </template>
 
