@@ -130,9 +130,12 @@ const voters = computed(() => voterBlocks.value
 )
 
 const update = (updated: Voters) => emit('update:modelValue', updated)
-watch(voters, () => {
+watch(voters, (prev, next) => {
     set(responses.value)
-    update(voters.value)
+
+    if (JSON.stringify(prev) !== JSON.stringify(next)) {
+        update(voters.value)
+    }
 })
 
 onMounted(() => {
