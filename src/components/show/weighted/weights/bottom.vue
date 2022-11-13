@@ -6,6 +6,15 @@ import {
 
 import Scored from '../../../tmpl/scored.vue'
 
+import {
+    faArrowUpWideShort,
+} from '@fortawesome/free-solid-svg-icons'
+
+const icon = {
+    definition: faArrowUpWideShort,
+    reference: ['fas','arrow-up-wide-short'],
+}
+
 defineProps<{
     voters: Voters
     scorer: Scorer
@@ -24,6 +33,7 @@ export default {
     <Scored
         :voters="voters"
         :scorer="scorer"
+        :icon="icon"
     >
         <template #title>Bottom Weighted Vote</template>
         <template #desc>Last choice gets minimal voting influence</template>

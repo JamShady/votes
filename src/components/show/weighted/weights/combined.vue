@@ -6,6 +6,15 @@ import {
 
 import Scored from '../../../tmpl/scored.vue'
 
+import {
+    faCalculator,
+} from '@fortawesome/free-solid-svg-icons'
+
+const icon = {
+    definition: faCalculator,
+    reference: ['fas','calculator'],
+}
+
 defineProps<{
     voters: Voters
     scorer: Scorer
@@ -24,6 +33,7 @@ export default {
     <Scored
         :voters="voters"
         :scorer="scorer"
+        :icon="icon"
     >
         <template #title>Combined Weighted Vote</template>
         <template #desc>Combine Top + Bottom influences</template>
