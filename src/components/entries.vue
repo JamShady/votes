@@ -10,6 +10,10 @@ import {
     onMounted,
 } from 'vue'
 
+import {
+    debounce,
+} from 'lodash'
+
 
 const props = defineProps<{
     colors: string[]
@@ -22,6 +26,11 @@ const emit = defineEmits(['update:modelValue'])
 const placeholder = `Enter votes as per the following:
 - One vote per line
 - Blank line between vote groups (i.e. voters)`
+
+
+const storeKey = 'responses'
+const get = () => window.localStorage.getItem(storeKey)
+const set = debounce(value => window.localStorage.setItem(storeKey, value), 250)
 
 
 const responses = ref(`# shady
@@ -121,8 +130,13 @@ const voters = computed(() => voterBlocks.value
 )
 
 const update = (updated: Voters) => emit('update:modelValue', updated)
-watch(voters, () => update(voters.value))
+watch(voters, () => {
+    set(responses.value)
+    update(voters.value)
+})
+
 onMounted(() => {
+    responses.value = get() || responses.value
     setTimeout(adjustHeight, 250)
     update(voters.value)
 })

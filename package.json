@@ -16,7 +16,9 @@
     "@fortawesome/fontawesome-svg-core": "^6.2.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/vue-fontawesome": "^3.0.2",
+    "@types/lodash": "^4.14.188",
     "hinter": "github:JamShady/hinter",
+    "lodash": "^4.17.21",
     "vue": "^3.2.41"
   },
   "devDependencies": {
