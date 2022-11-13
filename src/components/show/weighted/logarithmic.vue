@@ -1,30 +1,15 @@
 <script setup lang="ts">
 import {
-    Vote,
-    Voter,
     Voters,
 } from '../../../../votes'
 
 import Card from '../../card.vue'
 import Weights from './weights.vue'
 
-import {
-    toRef,
-} from 'vue'
-
-
 const props = defineProps<{
     voters: Voters
     maxNumVotes: number
 }>()
-
-const maxNumVotes = toRef(props, 'maxNumVotes')
-
-// Top choice gets maximum votes
-const topDownScorer = (voter: Voter, vote: Vote) => Math.pow(maxNumVotes.value - voter.votes.indexOf(vote), 2)
-
-// Last choice counts as 1
-const bottomUpScorer = (voter: Voter, vote: Vote) => Math.pow(voter.votes.length - voter.votes.indexOf(vote), 2)
 </script>
 
 
@@ -50,8 +35,8 @@ export default {
         <template #default>
             <Weights
                 :voters="voters"
-                :top="topDownScorer"
-                :bottom="bottomUpScorer"
+                :maxNumVotes="maxNumVotes"
+                :scoreAdjuster="score => Math.pow(score, 2)"
                 v-bind="$attrs"
             />
         </template>
