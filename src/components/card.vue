@@ -1,3 +1,20 @@
+<script setup lang="ts">
+const props = withDefaults(defineProps<{
+    color?: string
+}>(), {
+    color: 'slate',
+})
+</script>
+
+
+<script lang="ts">
+export default {
+    name: 'Card',
+    inheritAttrs: false,
+}
+</script>
+
+
 <template>
     <div><!-- allows every card to retain independent height sizing -->
         <div
@@ -32,21 +49,3 @@
         </div>
     </div>
 </template>
-
-
-<script>
-export default {
-    name: 'Card',
-    inheritAttrs: false,
-}
-</script>
-
-
-<script setup>
-const props = defineProps({
-    color: {
-        type: String,
-        default: 'slate',
-    },
-})
-</script>

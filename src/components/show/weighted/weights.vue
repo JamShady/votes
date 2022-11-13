@@ -1,3 +1,28 @@
+<script setup lang="ts">
+import {
+    Scorer,
+    Voters,
+} from '../../../../votes'
+
+import Top    from './weights/top.vue'
+import Bottom from './weights/bottom.vue'
+import Combined from './weights/combined.vue'
+
+const props = defineProps<{
+    voters: Voters
+    top: Scorer
+    bottom: Scorer
+}>()
+</script>
+
+
+<script lang="ts">
+export default {
+    name: 'Weight Group',
+}
+</script>
+
+
 <template>
     <div
         class="flex flex-wrap justify-center gap-2"
@@ -16,23 +41,3 @@
         />
     </div>
 </template>
-
-
-<script>
-export default {
-    name: 'Weight Group',
-}
-</script>
-
-
-<script setup>
-import Top    from './weights/top.vue'
-import Bottom from './weights/bottom.vue'
-import Combined from './weights/combined.vue'
-
-const props = defineProps({
-    voters: Array,
-    top: Function,
-    bottom: Function,
-})
-</script>

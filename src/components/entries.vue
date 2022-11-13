@@ -1,20 +1,8 @@
-<template>
-    <textarea
-        :placeholder="placeholder"
-        @input="adjustHeight"
-        ref="textarea"
-        v-model="responses"
-    ></textarea>
-</template>
+<script setup lang="ts">
+import {
+    Voters,
+} from '../../votes'
 
-<script>
-export default {
-    name: 'Vote Entries',
-}
-</script>
-
-
-<script setup>
 import {
     ref,
     computed,
@@ -23,10 +11,10 @@ import {
 } from 'vue'
 
 
-const props = defineProps({
-    colors: Array,
-    modelValue: Array,
-})
+const props = defineProps<{
+    colors: string[]
+    modelValue: Voters
+}>()
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -62,13 +50,14 @@ Cyclades`)
 
 const textarea = ref(null)
 const adjustHeight = () => {
-    const element = textarea.value
+    // @ts-ignore
+    const element: HTMLTextAreaElement = textarea.value
     element.style.height = "auto"
     element.style.height = (element.scrollHeight + 2) + 'px'
 }
 
 
-const getColorForIndex = index => props.colors[index]
+const getColorForIndex = (index: number): string => props.colors[index]
 
 const voterBlocks = computed(() => responses.value
     .replaceAll(String.fromCharCode(160), ' ') // some devices use char(160) instead of char(32) for spaces, which breaks comparison tests... this fixes that
@@ -91,7 +80,7 @@ const votes = computed(() => voterBlocks.value
     .filter((value, index, self) => self.indexOf(value) === index)
 )
 
-const normalise = vote => vote.toLowerCase()
+const normalise = (vote: string) => vote.toLowerCase()
 const normalToVoteMap = computed(() => votes.value
     .map(vote => ({ [normalise(vote)]: vote }))
     .reduce((prev, curr) => ({ ...prev, ...curr }), {})
@@ -107,7 +96,7 @@ const conversions = computed(() => normalised.value
 )
 
 const voters = computed(() => voterBlocks.value
-    .map((voterBlock, index) => {
+    .map((voterBlock: string[], index: number) => {
         const color = getColorForIndex(index)
 
         const name = (voterBlock[0].match(/^#/)
@@ -131,10 +120,27 @@ const voters = computed(() => voterBlocks.value
     .filter(voter => voter.votes.length)
 )
 
-const update = updated => emit('update:modelValue', updated.value)
-watch(voters, () => update(voters))
+const update = (updated: Voters) => emit('update:modelValue', updated)
+watch(voters, () => update(voters.value))
 onMounted(() => {
     setTimeout(adjustHeight, 250)
-    update(voters)
+    update(voters.value)
 })
 </script>
+
+
+<script lang="ts">
+export default {
+    name: 'Vote Entries',
+}
+</script>
+
+
+<template>
+    <textarea
+        :placeholder="placeholder"
+        @input="adjustHeight"
+        ref="textarea"
+        v-model="responses"
+    ></textarea>
+</template>

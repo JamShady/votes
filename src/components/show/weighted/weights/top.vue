@@ -1,18 +1,31 @@
-<template>
-    <Scored>
-        <template #title>Top Weighted Vote</template>
-        <template #desc>First choice gets maximum voting influence</template>
-    </Scored>
-</template>
+<script setup lang="ts">
+import {
+    Scorer,
+    Voters,
+} from '../../../../../votes'
+
+import Scored from '../../../tmpl/scored.vue'
+
+defineProps<{
+    voters: Voters
+    scorer: Scorer
+}>()
+</script>
 
 
-<script>
+<script lang="ts">
 export default {
     name: 'Top Weighted',
 }
 </script>
 
 
-<script setup>
-import Scored from '../../../tmpl/scored.vue'
-</script>
+<template>
+    <Scored
+        :voters="voters"
+        :scorer="scorer"
+    >
+        <template #title>Top Weighted Vote</template>
+        <template #desc>First choice gets maximum voting influence</template>
+    </Scored>
+</template>
