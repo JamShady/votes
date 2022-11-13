@@ -32,45 +32,51 @@
                                     class="fa-stack"
                                     :class="`w-${voter.score % 5}`"
                                 >
-                                    <i
+                                    <FontAwesomeIcon
                                         v-if="[1,3].includes(voter.score % 5)"
-                                        class="fa-stack-1x fa-solid fa-minus"
-                                        data-fa-transform="rotate-90 left-8 grow-1.5"
-                                    ></i>
+                                        :icon="['fas','minus']"
+                                        class="fa-stack-1x"
+                                        transform="rotate-90 left-8 grow-1.5"
+                                    />
 
                                     <!-- generates vertical bars for 2, 3 and 4 tallys, which are identical except for the transform positioning -->
-                                    <i
+                                    <FontAwesomeIcon
                                         v-for="transform in {1:[],2:['left-6'],3:['left-2'],4:['left-6','right-2']}[voter.score % 5]"
-                                        class="fa-stack-1x fa-solid fa-grip-lines-vertical fa-fw"
-                                        :data-fa-transform="transform"
-                                    ></i>
+                                        :icon="['fas', 'grip-lines-vertical']"
+                                        class="fa-stack-1x fa-fw"
+                                        :transform="transform"
+                                    />
                                 </span>
 
                                 <span
                                     v-for="i of Math.floor(voter.score / 5)"
                                     class="fa-stack w-4 ml-0.5"
                                 >
-                                    <i
-                                        class="fa-stack-1x fa-solid fa-grip-lines-vertical"
-                                        data-fa-transform="left-6"
-                                    ></i>
-                                    <i
-                                        class="fa-stack-1x fa-solid fa-grip-lines-vertical"
-                                        data-fa-transform="right-2"
-                                    ></i>
-                                    <i
-                                        class="fa-stack-1x fa-solid fa-minus"
-                                        data-fa-transform="rotate--30 grow-6 left-2"
-                                    ></i>
+                                    <FontAwesomeIcon
+                                        :icon="['fas', 'grip-lines-vertical']"
+                                        class="fa-stack-1x"
+                                        transform="left-6"
+                                    />
+                                    <FontAwesomeIcon
+                                        :icon="['fas', 'grip-lines-vertical']"
+                                        class="fa-stack-1x"
+                                        transform="right-2"
+                                    />
+                                    <FontAwesomeIcon
+                                        :icon="['fas','minus']"
+                                        class="fa-stack-1x"
+                                        transform="rotate--30 grow-6 left-2"
+                                    />
                                 </span>
                             </template>
 
                             <template v-else>
-                                <i
+                                <FontAwesomeIcon
                                     v-for="i of voter.score"
-                                    class="fa-solid fa-square-check m-0.25 shadow-md"
+                                    :icon="['fas','square-check']"
+                                    class="m-0.25 shadow-md"
                                     :class="`shadow-${voter.color}-200`"
-                                ></i>
+                                />
                             </template>
                         </span>
                     </span>
@@ -93,6 +99,16 @@ import {
     toRef,
     computed,
 } from 'vue'
+
+import { library  } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon  } from '@fortawesome/vue-fontawesome'
+import {
+    faGripLinesVertical,
+    faMinus,
+    faSquareCheck,
+} from '@fortawesome/free-solid-svg-icons'
+
+library.add(faGripLinesVertical, faMinus, faSquareCheck)
 
 
 import Card from '../card.vue'
