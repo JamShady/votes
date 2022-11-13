@@ -4,9 +4,7 @@ import {
     Voters,
 } from '../../../votes'
 
-import Linear from './weighted/linear.vue'
-import TopPriority from './weighted/top-prority.vue'
-import Logarithmic from './weighted/logarithmic.vue'
+import Weights from './weighted/weights.vue'
 
 import {
     toRef,
@@ -35,19 +33,28 @@ export default {
         v-if="voters.length > 1"
         class="flex flex-wrap justify-center gap-4"
     >
-        <Linear
+        <Weights
+            title="Linearly"
+            desc="Linear voting strength"
             :voters="voters"
             :maxNumVotes="maxNumVotes"
+            :scoreAdjuster="score => score"
         />
 
-        <TopPriority
+        <Weights
+            title="Top Priority"
+            desc="Linear, but 1st choice gains +1"
             :voters="voters"
             :maxNumVotes="maxNumVotes"
+            :scoreAdjuster="(score: number, index: number) => score + (index === 0 ? 1 : 0)"
         />
 
-        <Logarithmic
+        <Weights
+            title="Logarithmically"
+            desc="Linear scoring, squared..."
             :voters="voters"
             :maxNumVotes="maxNumVotes"
+            :scoreAdjuster="score => Math.pow(score, 2)"
         />
     </div>
 </template>
