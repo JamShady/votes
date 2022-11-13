@@ -10,11 +10,15 @@ import {
     toRef,
 } from 'vue'
 
+import Card from '../../card.vue'
+
 import Top    from './weights/top.vue'
 import Bottom from './weights/bottom.vue'
 import Combined from './weights/combined.vue'
 
 const props = defineProps<{
+    title: string,
+    desc: string,
     voters: Voters
     maxNumVotes: number,
     scoreAdjuster: ScoreAdjuster
@@ -46,20 +50,35 @@ export default {
 
 
 <template>
-    <div
-        class="flex flex-wrap justify-center gap-2"
+    <Card
+        class="rounded-b-2xl"
     >
-        <Top
-            :voters="voters"
-            :scorer="topDownScorer"
-        />
-        <Bottom
-            :voters="voters"
-            :scorer="bottomUpScorer"
-        />
-        <Combined
-            :voters="voters"
-            :scorer="(...args) => topDownScorer(...args) + bottomUpScorer(...args)"
-        />
-    </div>
+        <template #header>
+            {{ title }} Weighted Votes
+        </template>
+
+        <template #desc>
+            {{ desc }}, i.e.
+            {{ [...Array(maxNumVotes).keys()].reverse().map(score => score + 1).map(scoreAdjuster).join(', ') }}
+        </template>
+
+        <template #default>
+            <div
+                class="flex flex-wrap justify-center gap-2"
+            >
+                <Top
+                    :voters="voters"
+                    :scorer="topDownScorer"
+                />
+                <Bottom
+                    :voters="voters"
+                    :scorer="bottomUpScorer"
+                />
+                <Combined
+                    :voters="voters"
+                    :scorer="(...args) => topDownScorer(...args) + bottomUpScorer(...args)"
+                />
+            </div>
+        </template>
+    </Card>
 </template>
