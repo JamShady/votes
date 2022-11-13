@@ -45,12 +45,14 @@ import Votes   from './show/voters.vue'
 import Popularity from './show/popularity.vue'
 import Weighted from './show/weighted.vue'
 
+import availableColors from '../colors.json'
+
 import {
     ref,
 } from 'vue'
 
 const voters = ref([])
-const colors = ['red', 'orange', 'yellow', 'lime', 'blue', 'violet', 'fuchsia']
+const colors = availableColors
     .map(value => ({ value, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
     .map(({ value }) => value)

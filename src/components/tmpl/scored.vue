@@ -26,6 +26,7 @@
                             :title="`${voter.name}: ${voter.score}`"
                         >
                             <template v-if="bars">
+                                <!-- hint w-(1|2|3|4) -->
                                 <span
                                     v-if="voter.score % 5 !== 0"
                                     class="fa-stack"
