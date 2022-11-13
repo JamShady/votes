@@ -1,3 +1,23 @@
+<script setup lang="ts">
+import {
+    Voters,
+} from '../../../votes'
+
+import Card from '../card.vue'
+
+const props = defineProps<{
+    voters: Voters
+}>()
+</script>
+
+
+<script lang="ts">
+export default {
+    name: 'Voters',
+}
+</script>
+
+
 <template>
     <Card
         class="rounded-b-xl"
@@ -30,19 +50,3 @@
         </div>
     </Card>
 </template>
-
-
-<script>
-export default {
-    name: 'Voters',
-}
-</script>
-
-
-<script setup>
-import Card from '../card.vue'
-
-const props = defineProps({
-    voters: Array,
-})
-</script>

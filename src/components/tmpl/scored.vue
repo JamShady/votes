@@ -1,3 +1,69 @@
+<script setup lang="ts">
+import {
+    Scorer,
+    Voters,
+} from '../../../votes'
+
+import {
+    toRef,
+    computed,
+} from 'vue'
+
+import Card from '../card.vue'
+
+import { library  } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon  } from '@fortawesome/vue-fontawesome'
+import {
+    faGripLinesVertical,
+    faMinus,
+    faSquareCheck,
+} from '@fortawesome/free-solid-svg-icons'
+
+library.add(faGripLinesVertical, faMinus, faSquareCheck)
+
+
+const props = withDefaults(defineProps<{
+    voters: Voters
+    scorer: Scorer
+    bars?: boolean
+}>(), {
+    bars: true,
+})
+
+
+const voters = toRef(props, 'voters')
+const scorer = props.scorer
+const votes = computed(() => voters.value // [{ name:shady, votes:[foo,bar] }, { name:sal, votes:[bar] }]
+    .map(voter => voter.votes) // [[foo,bar], [bar]]
+    .flat() // [foo,bar,bar]
+    .filter((value, index, self) => self.indexOf(value) === index) // [foo,bar]
+    .map(vote => ({
+        vote,                                               // foo
+        voters: voters.value                                // [{ name:shady, ...}, { name:sal, ...}]
+            .filter(voter => voter.votes.includes(vote))    // [{ name:shady, ...}]
+            .map(voter => ({                                // [{ name:shady, score:number, ...}]
+                ...voter,
+                score: scorer(voter, vote),
+            })),
+    })) // [{ vote:'foo', voters:[{ name:shady, score:number, ... }] }]
+    .map(vote => ({
+        ...vote,
+        score: vote.voters
+            .map(voter => voter.score)
+            .reduce((prev, curr) => prev + curr, 0),
+    })) // [{ vote:foo, score:1, voters:[{ name:shady, score:1 }], ... }]
+    .sort((a,b) => b.score - a.score || b.voters.length - a.voters.length) // sort by score, then number of voters
+)
+</script>
+
+
+<script lang="ts">
+export default {
+    name: 'Votes By Score',
+}
+</script>
+
+
 <template>
     <Card>
         <template #header>
@@ -85,69 +151,6 @@
         </template>
     </Card>
 </template>
-
-
-<script>
-export default {
-    name: 'Votes By Score',
-}
-</script>
-
-
-<script setup>
-import {
-    toRef,
-    computed,
-} from 'vue'
-
-import { library  } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon  } from '@fortawesome/vue-fontawesome'
-import {
-    faGripLinesVertical,
-    faMinus,
-    faSquareCheck,
-} from '@fortawesome/free-solid-svg-icons'
-
-library.add(faGripLinesVertical, faMinus, faSquareCheck)
-
-
-import Card from '../card.vue'
-
-
-const props = defineProps({
-    voters: Array,
-    scorer: Function,
-    bars: {
-        type: Boolean,
-        default: true,
-    },
-})
-
-
-const voters = toRef(props, 'voters')
-const scorer = props.scorer
-const votes = computed(() => voters.value // [{ name:shady, votes:[foo,bar] }, { name:sal, votes:[bar] }]
-    .map(voter => voter.votes) // [[foo,bar], [bar]]
-    .flat() // [foo,bar,bar]
-    .filter((value, index, self) => self.indexOf(value) === index) // [foo,bar]
-    .map(vote => ({
-        vote,                                               // foo
-        voters: voters.value                                // [{ name:shady, ...}, { name:sal, ...}]
-            .filter(voter => voter.votes.includes(vote))    // [{ name:shady, ...}]
-            .map(voter => ({                                // [{ name:shady, score:number, ...}]
-                ...voter,
-                score: scorer(voter, vote),
-            })),
-    })) // [{ vote:'foo', voters:[{ name:shady, score:number, ... }] }]
-    .map(vote => ({
-        ...vote,
-        score: vote.voters
-            .map(voter => voter.score)
-            .reduce((prev, curr) => prev + curr, 0),
-    })) // [{ vote:foo, score:1, voters:[{ name:shady, score:1 }], ... }]
-    .sort((a,b) => b.score - a.score || b.voters.length - a.voters.length) // sort by score, then number of voters
-)
-</script>
 
 
 <style scoped>
