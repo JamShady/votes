@@ -19,10 +19,11 @@ import { FontAwesomeIcon  } from '@fortawesome/vue-fontawesome'
 import {
     faGripLinesVertical,
     faMinus,
+    faSquare,
     faSquareCheck,
 } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faGripLinesVertical, faMinus, faSquareCheck)
+library.add(faGripLinesVertical, faMinus, faSquare, faSquareCheck)
 
 
 const props = withDefaults(defineProps<{
@@ -56,6 +57,8 @@ const votes = computed(() => voters.value // [{ name:shady, votes:[foo,bar] }, {
                 ...voter,
                 score: scorer(voter, vote),
             })),
+        abstainers: voters.value
+            .filter(voter => !voter.votes.includes(vote)),
     })) // [{ vote:'foo', voters:[{ name:shady, score:number, ... }] }]
     .map(vote => ({
         ...vote,
@@ -102,6 +105,17 @@ export default {
                     </span>
 
                     <span class="ml-auto flex flex-wrap gap-2 justify-end cursor-pointer">
+                        <!-- abstainers for the popularity vote -->
+                        <template v-if="!bars">
+                            <FontAwesomeIcon
+                                v-for="voter in vote.abstainers"
+                                :icon="['fas','square']"
+                                class="m-0.25 shadow-md opacity-50"
+                                :class="`text-${voter.color}-300 shadow-${voter.color}-200`"
+                                :title="voter.name"
+                            />
+                        </template>
+
                         <span
                             v-for="voter in vote.voters.sort((a,b) => a.score - b.score)"
                             :class="`text-${voter.color}-500`"
