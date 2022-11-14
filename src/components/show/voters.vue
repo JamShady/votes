@@ -28,7 +28,7 @@ const votesByCount = (count: number) => Object.entries(counts.value)
 const common = computed(() => votesByCount(voters.value.length))
 const unique = computed(() => votesByCount(1))
 
-const commonClass = 'font-medium'
+const commonClass = 'font-bold'
 const uniqueClass = 'italic'
 </script>
 

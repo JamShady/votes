@@ -94,10 +94,10 @@ export default {
             <ol>
                 <li
                     v-for="vote of votes"
-                    class="flex flex-wrap justify-between border-b-2"
+                    class="flex flex-wrap justify-between border-b-2 items-center"
                     :class="`border-b-${color}-100`"
                 >
-                    <span class="mr-2">
+                    <span class="mt-1 mr-2">
                         {{ vote.score }}: {{ vote.vote }}
                     </span>
 
@@ -172,5 +172,10 @@ export default {
 <style scoped>
 ol li:last-of-type {
     border-bottom: 0;
+}
+
+div :deep(div:has(> ol)) {
+    padding-top: 0;
+    padding-bottom: 0;
 }
 </style>
