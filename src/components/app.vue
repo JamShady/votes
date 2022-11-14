@@ -29,11 +29,9 @@ export default {
     <div class="flex flex-col sm:flex-row gap-2">
         <div><!-- otherwise textarea would fill the height preventing height:auto from being useful -->
             <Entries
-                class="w-full p-2
+                class="w-full p-2 border
                     sm:w-40 sm:shrink-0
                     shadow-2xl rounded-b-3xl sm:rounded-bl-none
-                    border border-gray-400
-                    from-gray-100 to-gray-300 bg-gradient-to-b sm:bg-gradient-to-l
                     transition-all duration-500 ease-in-out"
                 :colors="colors"
                 v-model="voters"

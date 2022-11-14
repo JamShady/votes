@@ -66,7 +66,7 @@ const adjustHeight = () => {
 }
 
 
-const getColorForIndex = (index: number): string => props.colors[index]
+const getColorForIndex = (index: number, fallback = 'slate'): string => props.colors[index] || fallback
 
 const voterBlocks = computed(() => responses.value
     .replaceAll(String.fromCharCode(160), ' ') // some devices use char(160) instead of char(32) for spaces, which breaks comparison tests... this fixes that
@@ -138,8 +138,52 @@ watch(voters, (prev, next) => {
     }
 })
 
+
+type VoterBlocks = string[][]
+
+// change the text-area color based on which voter is being edited
+const getEditedBlockIndex = (next: VoterBlocks): number|null => {
+    const prev = getEditedBlockIndex.prev
+    getEditedBlockIndex.prev = next
+
+    // if we've made no change, then do nothing!!
+    if (JSON.stringify(next) === JSON.stringify(prev)) {
+        return null
+    }
+
+    // if we've deleted a block, then it's gone
+    if (next.length < prev.length) {
+        return -1
+    }
+
+    // at this point either the lengths are identical, or we have more new ones (which could be inserted midway)
+    // so either way, we have to loop through until we find the difference
+    const min = Math.min(next.length, prev.length)
+    const max = Math.max(next.length, prev.length)
+
+    for(let i = 0; i < min; i++) {
+        if (JSON.stringify(next[i]) !== JSON.stringify(prev[i])) {
+            return i
+        }
+    }
+
+    return max - 1
+}
+getEditedBlockIndex.prev = [['']]
+
+const color = ref(getColorForIndex(-1))
+
+watch(voterBlocks, debounce((next: VoterBlocks) => {
+    const index = getEditedBlockIndex(next)
+    if (index !== null) {
+        color.value = getColorForIndex(index)
+    }
+}, 250))
+
+
 onMounted(() => {
     responses.value = get() || responses.value
+    getEditedBlockIndex.prev = voterBlocks.value
     setTimeout(adjustHeight, 250)
     update(voters.value)
 })
@@ -155,6 +199,7 @@ export default {
 
 <template>
     <textarea
+        :class="`text-${color}-800 border-${color}-400 outline-${color}-400 bg-${color}-100 shadow-${color}-300`"
         :placeholder="placeholder"
         @input="adjustHeight"
         ref="textarea"
