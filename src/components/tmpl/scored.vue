@@ -94,9 +94,10 @@ export default {
         </template>
 
         <template v-slot="{ color }" #default>
-            <ol>
+            <TransitionGroup tag="ol" name="list">
                 <li
                     v-for="vote of votes"
+                    :key="vote.vote"
                     class="flex flex-wrap justify-between border-b-2 items-center"
                     :class="`border-b-${color}-100`"
                 >
@@ -177,7 +178,7 @@ export default {
                         </span>
                     </span>
                 </li>
-            </ol>
+            </TransitionGroup>
         </template>
     </Card>
 </template>
@@ -191,5 +192,23 @@ ol li:last-of-type {
 div :deep(div:has(> ol)) {
     padding-top: 0;
     padding-bottom: 0;
+}
+
+.list-move, /* apply transition to moving elements */
+.list-enter-active,
+.list-leave-active {
+    transition: all 0.5s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
+}
+
+/* ensure leaving items are taken out of layout flow so that moving
+   animations can be calculated correctly. */
+.list-leave-active {
+    position: absolute;
 }
 </style>
