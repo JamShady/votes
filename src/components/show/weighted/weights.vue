@@ -8,9 +8,11 @@ import {
 
 import {
     toRef,
+    computed,
 } from 'vue'
 
 import Card from '../../card.vue'
+import Scored from '../../tmpl/scored.vue'
 
 import Top    from './weights/top.vue'
 import Bottom from './weights/bottom.vue'
@@ -20,11 +22,18 @@ const props = defineProps<{
     title: string,
     desc: string,
     voters: Voters
-    maxNumVotes: number,
     scoreAdjuster: ScoreAdjuster
 }>()
 
-const maxNumVotes = toRef(props, 'maxNumVotes')
+const voters = toRef(props, 'voters')
+const numVotes = computed(() => voters.value
+    .map(voter => voter.votes.length)
+    .filter((num, index, self) => self.indexOf(num) === index)
+)
+
+const isNumVotesVaried = computed(() => numVotes.value.length > 1)
+
+const maxNumVotes = computed(() => Math.max(...numVotes.value))
 const scoreAdjuster = toRef(props, 'scoreAdjuster')
 
 // The basic mechanic is all scores are based on the 'max' value allowed, minus the index of the vote
@@ -51,6 +60,7 @@ export default {
 
 <template>
     <Card
+        v-if="isNumVotesVaried"
         class="rounded-b-2xl"
     >
         <template #header>
@@ -81,4 +91,18 @@ export default {
             </div>
         </template>
     </Card>
+    <Scored
+        v-else
+        :voters="voters"
+        :scorer="topDownScorer"
+    >
+        <template #title>
+            {{ title }} Weighted Votes
+        </template>
+
+        <template #desc>
+            {{ desc }}, i.e.
+            {{ [...Array(maxNumVotes).keys()].reverse().map(score => score + 1).map(scoreAdjuster).join(', ') }}
+        </template>
+    </Scored>
 </template>
