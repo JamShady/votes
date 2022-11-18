@@ -11,13 +11,7 @@ import {
     computed,
 } from 'vue'
 
-import Card from '../../../card.vue'
-import Scored from '../../../tmpl/scored.vue'
-
-import Top    from './top.vue'
-import Bottom from './bottom.vue'
-import Combined from './combined.vue'
-
+import Group from './group.vue'
 
 import {
     FontAwesomeIcon,
@@ -86,9 +80,11 @@ export default {
 
 
 <template>
-    <Card
-        v-if="isNumVotesVaried"
-        class="rounded-b-2xl"
+    <Group
+        :isNumVotesVaried="isNumVotesVaried"
+        :voters="voters"
+        :topDownScorer="topDownScorer"
+        :bottomUpScorer="bottomUpScorer"
     >
         <template #header>
             <FontAwesomeIcon
@@ -100,37 +96,5 @@ export default {
         <template #desc>
             Each vote only counts once
         </template>
-
-        <template #default>
-            <div
-                class="flex flex-wrap justify-center gap-2"
-            >
-                <Top
-                    :voters="voters"
-                    :scorer="topDownScorer"
-                />
-                <Bottom
-                    :voters="voters"
-                    :scorer="bottomUpScorer"
-                />
-                <Combined
-                    :voters="voters"
-                    :scorer="(...args) => topDownScorer(...args) + bottomUpScorer(...args)"
-                />
-            </div>
-        </template>
-    </Card>
-    <Scored
-        v-else
-        :voters="voters"
-        :scorer="topDownScorer"
-    >
-        <template #title>
-            Singular Vote
-        </template>
-
-        <template #desc>
-            Each vote only counts once
-        </template>
-    </Scored>
+    </Group>
 </template>
