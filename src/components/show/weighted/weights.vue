@@ -12,6 +12,7 @@ import {
 import Card from '../../card.vue'
 
 import Singular from './weights/singular.vue'
+import Multi from './weights/multi.vue'
 
 const props = defineProps<{
     title: string,
@@ -63,6 +64,12 @@ export default {
                 class="flex flex-wrap justify-center gap-2"
             >
                 <Singular
+                    :voters="voters"
+                    :maxNumVotes="maxNumVotes"
+                    :isNumVotesVaried="isNumVotesVaried"
+                    :scoreByIndex="scoreByIndex"
+                />
+                <Multi
                     :voters="voters"
                     :maxNumVotes="maxNumVotes"
                     :isNumVotesVaried="isNumVotesVaried"
