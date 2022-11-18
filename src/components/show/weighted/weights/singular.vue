@@ -3,7 +3,7 @@ import {
     Vote,
     Voter,
     Voters,
-    ScoreAdjuster,
+    ScoreByIndex,
 } from '../../../../../votes'
 
 import {
@@ -40,7 +40,7 @@ const props = defineProps<{
     maxNumVotes: number
     isNumVotesVaried: boolean
     voters: Voters
-    scoreAdjuster: ScoreAdjuster
+    scoreByIndex: ScoreByIndex
 }>()
 
 const maxNumVotes = toRef(props, 'maxNumVotes')
@@ -56,16 +56,8 @@ const icon = computed(() => {
     }
 })
 
-// The basic mechanic is all scores are based on the 'max' value allowed, minus the index of the vote
-// so, assuming votes where the maximum number of votes is 4
-// topDown  = max score is 4, so top vote gets 4, even if they only voted for one item
-// bottomUp = max score is how many votes they made, so if you voted for two, your top is worth 2
-const scoreAdjuster = toRef(props, 'scoreAdjuster')
-const score = (maxScore: number, votes: Vote[], vote: Vote) => {
-    const index = votes.indexOf(vote)
-    const score = maxScore - index
-    return scoreAdjuster.value(score, index)
-}
+const scoreByIndex = toRef(props, 'scoreByIndex')
+const score = (maxScore: number, votes: Vote[], vote: Vote) => scoreByIndex.value(maxScore, votes.indexOf(vote))
 
 const topDownScorer  = (voter: Voter, vote: Vote) => score(maxNumVotes.value,  voter.votes, vote)
 const bottomUpScorer = (voter: Voter, vote: Vote) => score(voter.votes.length, voter.votes, vote)
